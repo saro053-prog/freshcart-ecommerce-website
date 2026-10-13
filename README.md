@@ -1,16 +1,21 @@
-# FreshCart - Online Supermarket Website
+# FreshCart - Online Supermarket Platform
 
-A modern, high-performance full-stack e-commerce grocery storefront built with FastAPI, Jinja2 server-rendered templates, and responsive design, engineered for seamless grocery shopping, catalog exploration, shopping cart workflows, seller product management, and administrative control.
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+A modern, high-performance full-stack e-commerce grocery marketplace built with FastAPI, Jinja2 server-rendered templates, and responsive design, engineered for seamless grocery shopping, category-based discovery, persistent carts, merchant vendor management, and administrative control.
 
 ---
 
-## Overview
+## 📌 Overview
 
-**FreshCart** (Online Super Market) is a digital grocery marketplace designed to streamline daily essentials shopping. It bridges the gap between everyday consumers and local grocery vendors, offering real-time product discovery, category-based browsing, dynamic shopping carts, user order history, seller product portals, and administrative oversight. The platform utilizes a dual-engine database architecture (MySQL with an automatic fallback to SQLite) ensuring high availability, reliable local execution, and effortless deployment.
+**FreshCart** is a digital grocery marketplace designed to streamline daily essentials procurement. It bridges the gap between everyday consumers and local grocery vendors, offering real-time product discovery, category-based browsing, dynamic shopping carts, user order history, seller product portals, and administrative oversight. The platform utilizes a dual-engine database architecture (MySQL with an automatic fallback to SQLite) ensuring high availability, reliable local execution, and effortless deployment.
 
 ---
 
-## Features
+## 🚀 Features
 
 - **Modern Responsive Storefront**: Clean, accessible, and mobile-friendly UI crafted with modern CSS custom properties, responsive flex/grid layouts, and interactive micro-animations.
 - **Dynamic Product Catalog**: Filter products across categories (Fruits, Vegetables, Dairy, Bakery, Beverages, Snacks) with search and price filtering.
@@ -24,30 +29,30 @@ A modern, high-performance full-stack e-commerce grocery storefront built with F
 
 ---
 
-## Technologies Used
+## 🛠️ Technologies Used
 
-- **Frontend**:
-  - HTML5
-  - CSS3 (Custom design system, flexbox, grid, responsive design)
-  - JavaScript (Vanilla ES6+ for cart interactions, navbar toggling, dynamic UI)
-  - Google Fonts (DM Sans, Space Grotesk)
-- **Backend**:
-  - Python 3
-  - FastAPI (High-performance asynchronous Python web framework)
-  - Starlette (Session middleware, static file serving)
-  - Jinja2 (Templating engine)
-  - Uvicorn (ASGI web server)
-- **Database & Storage**:
-  - MySQL (Production relational database)
-  - SQLite (Automated fallback & development database)
-  - PyMySQL (Pure Python MySQL client)
-- **Security & Utilities**:
-  - Werkzeug (Secure password hashing & secure filename handling)
-  - python-dotenv (Environment configuration management)
+### Frontend
+- **HTML5 & CSS3**: Custom design system, flexbox, grid, responsive design.
+- **JavaScript (ES6+)**: Cart operations, dynamic quantity adjustments, navigation drawers.
+- **Google Fonts**: DM Sans, Space Grotesk.
+
+### Backend
+- **Python 3**: Asynchronous backend execution.
+- **FastAPI**: Modern, high-performance web framework.
+- **Starlette**: Session middleware with encrypted cookies and static routing.
+- **Jinja2**: Server-side template rendering engine.
+- **Uvicorn**: Lightning-fast ASGI production web server.
+
+### Database & Security
+- **MySQL 8.0**: Production relational database engine.
+- **SQLite**: Zero-configuration development and fallback database engine.
+- **PyMySQL**: Pure Python MySQL connection library.
+- **Werkzeug**: PBKDF2 password hashing with SHA-256 and secure filename handling.
+- **python-dotenv**: Environment configuration management.
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 freshcart-ecommerce-website/
@@ -60,7 +65,7 @@ freshcart-ecommerce-website/
 │   ├── js/
 │   │   ├── navbar.js         # Mobile navigation drawer controller
 │   │   └── storefront.js     # Cart operations, quantity updates, dynamic UI
-│   └── images/               # Product photography, promotional banners, fonts
+│   └── uploads/              # Product photography, promotional banners, fonts
 ├── templates/
 │   ├── admin_dashboard.html      # Administrator management control center
 │   ├── cart.html                 # Active shopping cart and price calculation
@@ -77,6 +82,9 @@ freshcart-ecommerce-website/
 │   ├── seller-register.html      # Vendor onboarding registration
 │   ├── seller_product_edit.html  # Product editor for sellers
 │   └── user_dashboard.html       # Customer account overview
+├── docs/
+│   ├── architecture.md       # High-level architecture and ER diagram
+│   └── api-endpoints.md      # REST route and endpoint reference
 ├── app.py                    # Main FastAPI application backend and routing
 ├── requirements.txt          # Python package dependencies
 ├── .env.example              # Environment variables template
@@ -86,7 +94,7 @@ freshcart-ecommerce-website/
 
 ---
 
-## Installation & Setup
+## ⚙️ Installation & Setup
 
 ### 1. Prerequisites
 - Python 3.10+ installed
@@ -132,7 +140,7 @@ uvicorn app:app --host 127.0.0.1 --port 8000 --reload
 
 ---
 
-## Usage
+## 🚦 Usage
 
 1. Open your browser and navigate to:
    - Storefront Homepage: [http://127.0.0.1:8000](http://127.0.0.1:8000)
@@ -143,15 +151,7 @@ uvicorn app:app --host 127.0.0.1 --port 8000 --reload
 
 ---
 
-## Screenshots
-
-| Storefront Hero & Promotions | Product Catalog & Categories |
-|:---:|:---:|
-| ![FreshCart Hero](static/images/hero-grocery.jpg) | ![FreshCart Deals](static/images/deal-groceries.jpg) |
-
----
-
-## Future Improvements
+## 🔮 Future Improvements
 
 - [ ] Integration with online payment gateways (Stripe / Razorpay).
 - [ ] Email / SMS order confirmation notifications.
@@ -161,8 +161,9 @@ uvicorn app:app --host 127.0.0.1 --port 8000 --reload
 
 ---
 
-## Author
+## 👤 Author
 
 **V. Saravanapandi**  
 - GitHub: [@saro053-prog](https://github.com/saro053-prog)
-- Email: [saro77057@gmail.com](mailto:saro77057@gmail.com)
+- LinkedIn: [https://www.linkedin.com/in/saravana-pandi-6133a5344](https://www.linkedin.com/in/saravana-pandi-6133a5344)
+- Email: [msaravana791@gmail.com](mailto:msaravana791@gmail.com)
