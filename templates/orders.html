@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Orders | Online Super Market</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #f5f7fb;
+      }
+
+      .order-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+      }
+
+      .order-header {
+        background: #ffffff;
+        border-bottom: 1px solid #eee;
+        border-radius: 15px 15px 0 0;
+      }
+
+      .product-img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 10px;
+        background: #eee;
+      }
+
+      .status {
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/"> 🛒 Online Super Market </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarMenu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/cart">Cart</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" href="/orders"> My Orders </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/logout"> Logout </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="py-5">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h1 class="fw-bold">My Orders</h1>
+          <p class="text-muted">Track your orders and delivery status</p>
+        </div>
+
+        <!-- Order Card -->
+        {% if orders %} {% for order in orders %}
+
+        <div class="card order-card">
+          <div class="card-header order-header p-4">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <h5 class="mb-1">Order #{{ order.order_id }}</h5>
+
+                <small class="text-muted"> {{ order.created_on }} </small>
+              </div>
+
+              <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                {% if order.status == 'Delivered' %}
+                <span class="badge bg-success"> Delivered </span>
+
+                {% elif order.status == 'Shipped' %}
+                <span class="badge bg-primary"> Shipped </span>
+
+                {% elif order.status == 'Cancelled' %}
+                <span class="badge bg-danger"> Cancelled </span>
+
+                {% else %}
+                <span class="badge bg-warning text-dark">
+                  {{ order.status }}
+                </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="row">
+              <div class="col-md-8">
+                <p class="mb-2">
+                  <strong>Shipping Address:</strong>
+                </p>
+
+                <p class="text-muted">{{ order.shipping_address }}</p>
+
+                <p class="mb-0">
+                  <strong>Phone:</strong>
+                  {{ order.phone }}
+                </p>
+              </div>
+
+              <div class="col-md-4 text-md-end">
+                <p class="text-muted mb-1">Total Amount</p>
+
+                <h3 class="fw-bold">₹{{ order.total }}</h3>
+
+                <span class="badge bg-secondary"> Cash on Delivery </span>
+              </div>
+            </div>
+
+            {% if order_items and order_items[order.order_id] %}
+            <hr class="my-3" />
+            <h6 class="fw-bold mb-3">Items in this order:</h6>
+            <div class="row g-3">
+              {% for item in order_items[order.order_id] %}
+              <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-light">
+                  <div>
+                    <strong class="d-block">{{ item.product_name }}</strong>
+                    <small class="text-muted">Qty: {{ item.qty }} &times; ₹{{ item.price }}</small>
+                  </div>
+                  <div class="text-end">
+                    <strong class="d-block">₹{{ item.price * item.qty }}</strong>
+                    <a href="/feedback/{{ item.product_id }}" class="btn btn-sm btn-outline-primary mt-1">★ Rate Product</a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% endfor %} {% else %}
+
+        <!-- No Orders -->
+        <div class="text-center py-5">
+          <div style="font-size: 70px">🛍️</div>
+
+          <h3 class="mt-3">No Orders Yet</h3>
+
+          <p class="text-muted">You haven't placed any orders yet.</p>
+
+          <a href="/" class="btn btn-dark px-4"> Start Shopping </a>
+        </div>
+
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

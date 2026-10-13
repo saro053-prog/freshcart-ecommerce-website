@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FreshCart | Everyday shopping, made brighter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/storefront.css') }}" />
+  </head>
+  <body>
+    <div class="announcement">Free delivery on orders over ₹499 <span>•</span> Fresh picks added every morning</div>
+    <nav class="site-nav">
+      <div class="nav-inner">
+        <a class="brand" href="{{ url_for('start') }}"><span class="brand-mark">+</span> fresh<span>cart</span></a>
+        <div class="nav-links">
+          <a class="active" href="{{ url_for('start') }}">Home</a>
+          <a href="{{ url_for('products') }}">All Products</a>
+          <a href="#catalog">Featured</a>
+          <a href="#why-us">Why FreshCart</a>
+        </div>
+        <div class="nav-actions">
+          <a class="icon-link" href="#favorites" aria-label="Favorites">♡ <span class="favorite-count">0</span></a>
+          <a class="cart-link" href="{{ url_for('cart') }}">Cart <span class="cart-count">{{ cart_count or 0 }}</span></a>
+          {% if current_user %}
+          <div style="display:inline-flex; align-items:center; gap:12px;">
+            <a class="login-link" href="{{ url_for('user_dashboard') }}">👤 Hi, {{ current_user.first_name }}</a>
+            <a href="/profile" style="color:var(--muted); font-size:13px;">Profile</a>
+            <a href="{{ url_for('logout') }}" style="color:#d9534f; font-size:13px; font-weight:600;">Logout</a>
+          </div>
+          {% elif current_seller %}
+          <div style="display:inline-flex; align-items:center; gap:12px;">
+            <a class="login-link" href="{{ url_for('seller_dashboard') }}">🏪 Seller Hub</a>
+            <a href="{{ url_for('logout') }}" style="color:#d9534f; font-size:13px; font-weight:600;">Logout</a>
+          </div>
+          {% elif current_admin %}
+          <div style="display:inline-flex; align-items:center; gap:12px;">
+            <a class="login-link" href="{{ url_for('admin_dashboard') }}">🛡️ Admin Panel</a>
+            <a href="{{ url_for('logout') }}" style="color:#d9534f; font-size:13px; font-weight:600;">Logout</a>
+          </div>
+          {% else %}
+          <a class="login-link" href="{{ url_for('login') }}">Sign in</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    {% if messages %}
+    <div style="background:#eef6fc; color:#1d6f8a; padding:12px 24px; text-align:center; font-size:14px; font-weight:600; border-bottom:1px solid #d0e7f9;">
+      {% for m in messages %}<div>{{ m }}</div>{% endfor %}
+    </div>
+    {% endif %}
+
+    <main>
+      <section class="hero container-wide">
+        <div class="hero-copy">
+          <p class="eyebrow">YOUR DAILY GOOD STUFF</p>
+          <h1>Good food.<br /><em>Good mood.</em></h1>
+          <p class="hero-text">A smarter way to fill your kitchen with fresh produce, pantry heroes, and everyday essentials.</p>
+          <div class="hero-actions">
+            <a class="button button-dark" href="{{ url_for('products') }}">Start shopping <span>↗</span></a>
+            <a class="text-link" href="#deals">See today's deals →</a>
+          </div>
+          <div class="hero-note">
+            <span class="avatar-stack"><i>R</i><i>A</i><i>M</i></span>
+            <span><strong>4.9/5</strong> from 2,000+ happy homes</span>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="{{ url_for('static', filename='uploads/hero-grocery.jpg') }}" alt="Colorful fresh groceries on a kitchen counter" />
+          <div class="hero-badge"><strong>Fresh in</strong><span>under 60 min</span></div>
+        </div>
+      </section>
+
+      <section class="trust-strip container-wide" id="why-us">
+        <div><span class="trust-icon">✦</span><strong>Picked today</strong><small>Peak freshness, always</small></div>
+        <div><span class="trust-icon">↗</span><strong>Quick delivery</strong><small>At your door, on time</small></div>
+        <div><span class="trust-icon">♡</span><strong>Local favorites</strong><small>From people you can trust</small></div>
+        <div><span class="trust-icon">₹</span><strong>Fair prices</strong><small>More value in every basket</small></div>
+      </section>
+
+      <section class="catalog container-wide" id="catalog">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">THE GOOD STUFF</p>
+            <h2>Shop the fresh edit</h2>
+          </div>
+          <a class="text-link" href="{{ url_for('products') }}">View all products →</a>
+        </div>
+        <div class="catalog-toolbar">
+          <div class="category-tabs">
+            <button class="category-tab active" data-filter="all">Everything</button>
+            {% for cat in categories %}
+            <button class="category-tab" data-filter="{{ cat.category_name|lower }}">{{ cat.category_name }}</button>
+            {% endfor %}
+          </div>
+          <label class="search-box">
+            <span>⌕</span>
+            <input type="search" id="product-search" placeholder="Search the good stuff" aria-label="Search products" />
+          </label>
+        </div>
+        <div class="product-grid">
+          {% if products %}
+            {% for product in products %}
+            <article class="product-card" data-category="{{ (product.category_name or 'pantry')|lower }}" data-name="{{ product.product_name|lower }}">
+              <a href="/product/{{ product.product_id }}">
+                <div class="product-media">
+                  {% if product.photo and (product.photo.startswith('http://') or product.photo.startswith('https://')) %}
+                  <img src="{{ product.photo }}" alt="{{ product.product_name }}" onerror="this.onerror=null; this.src='/static/uploads/deal-groceries.jpg';" />
+                  {% elif product.photo %}
+                  <img src="{{ url_for('static', filename='uploads/' + product.photo) }}" alt="{{ product.product_name }}" onerror="this.onerror=null; this.src='/static/uploads/deal-groceries.jpg';" />
+                  {% else %}
+                  <img src="{{ url_for('static', filename='uploads/product-' ~ ((loop.index0 % 4) + 1) ~ '.jpg') }}" alt="{{ product.product_name }}" />
+                  {% endif %}
+                  <button class="favorite-button" aria-label="Save {{ product.product_name }}" type="button">♡</button>
+                  {% if product.stock and product.stock <= 5 and product.stock > 0 %}
+                  <span class="product-tag" style="background:#ff6b6b; color:white;">Low Stock</span>
+                  {% elif not product.stock or product.stock <= 0 %}
+                  <span class="product-tag" style="background:#6c757d; color:white;">Out of stock</span>
+                  {% endif %}
+                </div>
+              </a>
+              <div class="product-meta">
+                <span class="product-category">{{ product.category_name or 'Everyday essential' }}</span>
+                <h3><a href="/product/{{ product.product_id }}">{{ product.product_name }}</a></h3>
+                <div class="product-bottom">
+                  <strong>₹{{ product.price }}</strong>
+                  {% if product.stock and product.stock > 0 %}
+                  <a class="add-button" href="{{ url_for('add_to_cart', product_id=product.product_id) }}">+ Add</a>
+                  {% else %}
+                  <span class="add-button" style="opacity:0.6; cursor:not-allowed;">Sold out</span>
+                  {% endif %}
+                </div>
+              </div>
+            </article>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <p class="empty-state" hidden>No products match that search. Try a different phrase.</p>
+      </section>
+
+      <section class="deal-banner container-wide" id="deals">
+        <div>
+          <p class="eyebrow">TODAY ONLY</p>
+          <h2>Make room for<br /><em>more good.</em></h2>
+          <p>Save 15% on pantry staples when you spend ₹999.</p>
+          <a class="button button-light" href="{{ url_for('products') }}">Browse pantry picks <span>↗</span></a>
+        </div>
+        <img src="{{ url_for('static', filename='uploads/deal-groceries.jpg') }}" alt="Fresh vegetables and pantry groceries" />
+      </section>
+
+      <section class="newsletter container-wide">
+        <div>
+          <p class="eyebrow">THE FRESH DROP</p>
+          <h2>Good things in your inbox.</h2>
+          <p>New arrivals, smart recipes, and deals worth opening.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="return subscribeNewsletter(event)">
+          <input type="email" placeholder="you@example.com" aria-label="Email address" required />
+          <button class="button button-dark" type="submit">Keep me posted <span>→</span></button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="brand"><span class="brand-mark">+</span> fresh<span>cart</span></div>
+      <p>Thoughtful groceries for everyday living.</p>
+      <small>© 2026 FreshCart</small>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/storefront.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+  </body>
+</html>

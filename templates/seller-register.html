@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Seller Registration | Online Super Market</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        min-height: 100vh;
+        background: #f5f7fb;
+        font-family: Arial, sans-serif;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .register-section {
+        padding: 55px 0;
+      }
+
+      .register-card {
+        border: none;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+      }
+
+      .register-left {
+        background: linear-gradient(135deg, #212529, #495057);
+        color: white;
+        padding: 50px 40px;
+      }
+
+      .register-left h1 {
+        font-weight: 700;
+      }
+
+      .feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 22px 0;
+      }
+
+      .feature-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .register-right {
+        padding: 45px;
+        background: white;
+      }
+
+      .form-control {
+        border-radius: 10px;
+        padding: 12px 14px;
+      }
+
+      .form-control:focus {
+        box-shadow: none;
+        border-color: #212529;
+      }
+
+      .btn-register {
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: 600;
+      }
+
+      .required {
+        color: #dc3545;
+      }
+
+      footer {
+        padding: 20px;
+        background: #212529;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/"> 🛒 Online Super Market </a>
+
+        <a href="/login" class="btn btn-outline-light btn-sm"> Login </a>
+      </div>
+    </nav>
+
+    <!-- ================= REGISTER SECTION ================= -->
+
+    <section class="register-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xl-10">
+            <div class="card register-card">
+              <div class="row g-0">
+                <!-- LEFT SIDE -->
+
+                <div class="col-lg-5 register-left">
+                  <div class="mb-4">
+                    <span class="badge bg-light text-dark mb-3">
+                      Seller Registration
+                    </span>
+
+                    <h1 class="display-6">Grow Your Business</h1>
+
+                    <p class="mt-3 text-white-50">
+                      Register your shop and start selling your products through
+                      our online supermarket platform.
+                    </p>
+                  </div>
+
+                  <div class="feature">
+                    <div class="feature-icon">🏪</div>
+
+                    <div>
+                      <strong>Manage Your Shop</strong>
+                      <br />
+                      <small class="text-white-50">
+                        Maintain your shop details
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="feature">
+                    <div class="feature-icon">📦</div>
+
+                    <div>
+                      <strong>Manage Products</strong>
+                      <br />
+                      <small class="text-white-50">
+                        Add, edit and manage products
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="feature">
+                    <div class="feature-icon">🚚</div>
+
+                    <div>
+                      <strong>Manage Orders</strong>
+                      <br />
+                      <small class="text-white-50">
+                        Update delivery status
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="feature">
+                    <div class="feature-icon">⭐</div>
+
+                    <div>
+                      <strong>Customer Feedback</strong>
+                      <br />
+                      <small class="text-white-50">
+                        View product feedback
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- RIGHT SIDE -->
+
+                <div class="col-lg-7 register-right">
+                  <div class="mb-4">
+                    <h2 class="fw-bold">Create Seller Account</h2>
+
+                    <p class="text-muted">
+                      Enter your shop and account details to register.
+                    </p>
+                  </div>
+
+                  <!-- FLASH MESSAGE -->
+
+                  {% if messages %}
+                  {% for message in messages %}
+
+                  <div class="alert alert-info">{{ message }}</div>
+
+                  {% endfor %} {% endif %}
+
+                  <!-- FORM -->
+
+                  <form
+                    action="/seller_register"
+                    method="POST"
+                    autocomplete="off"
+                  >
+                    <!-- ACCOUNT DETAILS -->
+
+                    <h6 class="fw-bold mb-3">Account Details</h6>
+
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label class="form-label">
+                          Username
+                          <span class="required">*</span>
+                        </label>
+
+                        <input
+                          type="text"
+                          name="username"
+                          class="form-control"
+                          placeholder="Enter username"
+                          required
+                        />
+                      </div>
+
+                      <div class="col-md-6">
+                        <label class="form-label">
+                          Password
+                          <span class="required">*</span>
+                        </label>
+
+                        <input
+                          type="password"
+                          name="password"
+                          class="form-control"
+                          placeholder="Create password"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <!-- SHOP DETAILS -->
+
+                    <h6 class="fw-bold mb-3">Shop Details</h6>
+
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label class="form-label">
+                          Shop Name
+                          <span class="required">*</span>
+                        </label>
+
+                        <input
+                          type="text"
+                          name="shop_name"
+                          class="form-control"
+                          placeholder="Enter shop name"
+                          required
+                        />
+                      </div>
+
+                      <div class="col-md-6">
+                        <label class="form-label"> GST Number </label>
+
+                        <input
+                          type="text"
+                          name="gst_no"
+                          class="form-control"
+                          placeholder="Enter GST number"
+                        />
+                      </div>
+
+                      <div class="col-12">
+                        <label class="form-label">
+                          Shop Address
+                          <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                          name="shop_address"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Enter complete shop address"
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <!-- CONTACT DETAILS -->
+
+                    <h6 class="fw-bold mb-3">Contact Details</h6>
+
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label class="form-label">
+                          Mobile Number
+                          <span class="required">*</span>
+                        </label>
+
+                        <input
+                          type="tel"
+                          name="mobile"
+                          class="form-control"
+                          placeholder="Enter mobile number"
+                          required
+                        />
+                      </div>
+
+                      <div class="col-md-6">
+                        <label class="form-label">
+                          Email Address
+                          <span class="required">*</span>
+                        </label>
+
+                        <input
+                          type="email"
+                          name="email"
+                          class="form-control"
+                          placeholder="Enter email address"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <!-- SUBMIT -->
+
+                    <div class="d-grid mt-4">
+                      <button type="submit" class="btn btn-dark btn-register">
+                        Create Seller Account →
+                      </button>
+                    </div>
+
+                    <p class="text-center text-muted mt-4 mb-0">
+                      Already have an account?
+
+                      <a href="/login" class="text-dark fw-semibold"> Login </a>
+                    </p>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+      <div class="container text-center">
+        <small> © 2026 Online Super Market. All Rights Reserved. </small>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

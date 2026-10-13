@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Cart | FreshCart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      :root { --ink: #17231d; --muted: #69736b; --lime: #d4ed57; --paper: #fffdf8; }
+      body { background: #f7f6f0; color: var(--ink); }
+      .navbar { background: var(--ink) !important; }
+      .brand { color: white; font-weight: 700; letter-spacing: -.04em; }
+      .hero { padding: 58px 0 30px; }
+      .hero h1 { font-weight: 700; letter-spacing: -.05em; }
+      .panel { border: 0; border-radius: 16px; box-shadow: 0 12px 30px rgba(23, 35, 29, .08); }
+      .cart-image { width: 78px; height: 78px; object-fit: cover; border-radius: 12px; background: #e8ecd9; }
+      .quantity-input { width: 74px; }
+      .summary { position: sticky; top: 24px; }
+      .total { font-size: 1.35rem; }
+      .checkout-btn { background: var(--ink); border: 0; border-radius: 99px; padding: 13px 20px; }
+      .checkout-btn:hover { background: #324638; }
+      .empty { padding: 75px 20px; }
+      .empty-mark { font-size: 54px; color: #94a15a; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand brand" href="{{ url_for('start') }}">+ freshcart</a>
+        <div class="d-flex gap-3 align-items-center">
+          <a class="nav-link text-white" href="{{ url_for('products') }}">Shop</a>
+          <a class="btn btn-light btn-sm rounded-pill px-3" href="{{ url_for('logout') }}">Log out</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container pb-5">
+      <section class="hero">
+        <p class="text-uppercase small fw-bold text-success mb-2">Your basket</p>
+        <h1>Good choices, almost home.</h1>
+        <p class="text-secondary mb-0">Review your items before placing the order.</p>
+      </section>
+
+      {% if messages %}
+      <div class="alert alert-info">{% for message in messages %}<div>{{ message }}</div>{% endfor %}</div>
+      {% endif %}
+
+      {% if cart_items %}
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <section class="panel bg-white p-3 p-md-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="h5 mb-0">Items in your cart</h2>
+              <span class="text-secondary small">{{ cart_items|length }} product{% if cart_items|length != 1 %}s{% endif %}</span>
+            </div>
+            {% for item in cart_items %}
+            <article class="d-flex gap-3 align-items-center border-top py-3">
+              {% if item.photo and (item.photo.startswith('http://') or item.photo.startswith('https://')) %}
+              <img class="cart-image" src="{{ item.photo }}" alt="{{ item.product_name }}" onerror="this.onerror=null; this.src='/static/uploads/deal-groceries.jpg';" />
+              {% elif item.photo %}
+              <img class="cart-image" src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="{{ item.product_name }}" onerror="this.onerror=null; this.src='/static/uploads/deal-groceries.jpg';" />
+              {% else %}
+              <div class="cart-image d-flex align-items-center justify-content-center fs-2">✦</div>
+              {% endif %}
+              <div class="flex-grow-1">
+                <h3 class="h6 mb-1">{{ item.product_name }}</h3>
+                <p class="small text-secondary mb-2">{{ item.brand_name or 'FreshCart essential' }}</p>
+                <strong>₹{{ item.price }}</strong>
+              </div>
+              <form action="{{ url_for('update_cart', cart_id=item.cart_id) }}" method="post" class="d-flex align-items-center gap-2">
+                <label class="visually-hidden" for="qty-{{ item.cart_id }}">Quantity</label>
+                <input id="qty-{{ item.cart_id }}" class="form-control quantity-input text-center" type="number" name="qty" min="1" max="99" value="{{ item.qty }}" />
+                <button class="btn btn-outline-dark btn-sm" type="submit">Update</button>
+              </form>
+              <form action="{{ url_for('remove_from_cart', cart_id=item.cart_id) }}" method="post">
+                <button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Remove {{ item.product_name }}">Remove</button>
+              </form>
+            </article>
+            {% endfor %}
+          </section>
+        </div>
+        <div class="col-lg-4">
+          <aside class="panel summary bg-white p-4">
+            <h2 class="h5 mb-4">Order summary</h2>
+            <div class="d-flex justify-content-between mb-3"><span class="text-secondary">Subtotal</span><strong>₹{{ subtotal }}</strong></div>
+            <div class="d-flex justify-content-between mb-3"><span class="text-secondary">Delivery</span><strong>{% if delivery %}₹{{ delivery }}{% else %}<span class="text-success">Free</span>{% endif %}</strong></div>
+            <hr />
+            <div class="d-flex justify-content-between total mb-4"><strong>Total</strong><strong>₹{{ total }}</strong></div>
+            <a class="btn checkout-btn text-white w-100" href="{{ url_for('checkout') }}">Continue to checkout <span aria-hidden="true">→</span></a>
+            <a class="d-block text-center mt-3 small text-secondary" href="{{ url_for('products') }}">Continue shopping</a>
+          </aside>
+        </div>
+      </div>
+      {% else %}
+      <section class="panel bg-white text-center empty">
+        <div class="empty-mark">✦</div>
+        <h2 class="h4 mt-3">Your cart is waiting</h2>
+        <p class="text-secondary">Add a few good things and they will show up here.</p>
+        <a class="btn checkout-btn text-white mt-2" href="{{ url_for('products') }}">Browse products</a>
+      </section>
+      {% endif %}
+    </main>
+  </body>
+</html>

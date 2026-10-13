@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Products | FreshCart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <style>
+      :root { --ink: #17231d; --lime: #d4ed57; --paper: #fffdf8; --cream: #f7f6f0; }
+      body { background: #f7f6f0; color: var(--ink); }
+      .navbar { background: var(--ink) !important; }
+      .brand { color: white; font-weight: 700; }
+      .hero-banner { background: var(--ink); color: white; padding: 48px 0 36px; border-radius: 0 0 28px 28px; }
+      .product-card { border: 0; border-radius: 16px; transition: transform 0.2s, box-shadow 0.2s; overflow: hidden; background: white; }
+      .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
+      .product-img-wrap { height: 210px; background: #faf9f5; position: relative; overflow: hidden; }
+      .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+      .filter-pill { padding: 7px 16px; border-radius: 99px; border: 1px solid #dcdfd8; font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; background: white; white-space: nowrap; }
+      .filter-pill.active, .filter-pill:hover { background: var(--ink); color: white; border-color: var(--ink); }
+      .btn-add { background: var(--ink); color: white; border-radius: 99px; padding: 6px 14px; font-size: 13px; font-weight: 600; text-decoration: none; }
+      .btn-add:hover { background: #2f4539; color: white; }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+      <div class="container">
+        <a class="navbar-brand brand" href="{{ url_for('start') }}">+ freshcart</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navProducts">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navProducts">
+          <ul class="navbar-nav me-auto ms-lg-4">
+            <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('start') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link text-white active fw-bold" href="{{ url_for('products') }}">All Products</a></li>
+          </ul>
+          <div class="d-flex align-items-center gap-3">
+            <a class="btn btn-outline-light btn-sm rounded-pill px-3" href="{{ url_for('cart') }}">
+              🛒 Cart <span class="badge bg-warning text-dark rounded-pill">{{ cart_count or 0 }}</span>
+            </a>
+            {% if current_user %}
+            <div class="dropdown">
+              <button class="btn btn-light btn-sm rounded-pill dropdown-toggle px-3" type="button" data-bs-toggle="dropdown">
+                👤 Hi, {{ current_user.first_name }}
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><a class="dropdown-item" href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('my_orders') }}">My Orders</a></li>
+                <li><a class="dropdown-item" href="/profile">My Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a></li>
+              </ul>
+            </div>
+            {% elif current_seller %}
+            <a class="btn btn-warning btn-sm rounded-pill px-3" href="{{ url_for('seller_dashboard') }}">Seller Hub</a>
+            {% elif current_admin %}
+            <a class="btn btn-info btn-sm rounded-pill px-3" href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
+            {% else %}
+            <a class="btn btn-light btn-sm rounded-pill px-3 fw-bold" href="{{ url_for('login') }}">Sign In</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header & Search -->
+    <header class="hero-banner mb-4">
+      <div class="container">
+        <div class="row align-items-center g-3">
+          <div class="col-lg-6">
+            <p class="text-uppercase small text-warning fw-bold mb-1">FRESH EDIT</p>
+            <h1 class="display-6 fw-bold mb-1">Shop The Market</h1>
+            <p class="text-white-50 mb-0">Browse farm-fresh produce, pantry essentials, and household favorites.</p>
+          </div>
+          <div class="col-lg-6">
+            <form action="{{ url_for('products') }}" method="get" class="d-flex gap-2">
+              {% if selected_category %}<input type="hidden" name="category_id" value="{{ selected_category }}" />{% endif %}
+              <input type="search" name="q" value="{{ query or '' }}" class="form-control form-control-lg rounded-pill px-4" placeholder="Search products, brands, groceries..." />
+              <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold">Search</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container pb-5">
+      <!-- Filter Bar -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 pb-2 border-bottom">
+        <!-- Categories Chips -->
+        <div class="d-flex gap-2 overflow-auto pb-1" style="max-width: 100%;">
+          <a href="{{ url_for('products') }}{% if query %}?q={{ query }}{% endif %}" class="filter-pill {% if not selected_category %}active{% endif %}">All Items</a>
+          {% for cat in categories %}
+          <a href="{{ url_for('products') }}?category_id={{ cat.category_id }}{% if query %}&q={{ query }}{% endif %}" class="filter-pill {% if selected_category == cat.category_id %}active{% endif %}">{{ cat.category_name }}</a>
+          {% endfor %}
+        </div>
+
+        <!-- Sorting -->
+        <form action="{{ url_for('products') }}" method="get" class="d-flex align-items-center gap-2">
+          {% if selected_category %}<input type="hidden" name="category_id" value="{{ selected_category }}" />{% endif %}
+          {% if query %}<input type="hidden" name="q" value="{{ query }}" />{% endif %}
+          <label class="small text-secondary fw-semibold text-nowrap" for="sortSelect">Sort by:</label>
+          <select id="sortSelect" name="sort" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
+            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+          </select>
+        </form>
+      </div>
+
+      <!-- Messages -->
+      {% if messages %}
+      <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+        {% for m in messages %}<div>{{ m }}</div>{% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endif %}
+
+      <!-- Products Grid -->
+      {% if products %}
+      <div class="row g-4">
+        {% for p in products %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card product-card h-100 shadow-sm">
+            <a href="/product/{{ p.product_id }}" class="text-decoration-none">
+              <div class="product-img-wrap">
+                {% if p.photo and (p.photo.startswith('http://') or p.photo.startswith('https://')) %}
+                <img src="{{ p.photo }}" alt="{{ p.product_name }}" loading="lazy" onerror="this.onerror=null; this.src='/static/uploads/deal-groceries.jpg';" />
+                {% elif p.photo %}
+                <img src="{{ url_for('static', filename='uploads/' + p.photo) }}" alt="{{ p.product_name }}" loading="lazy" onerror="this.onerror=null; this.src='/static/uploads/deal-groceries.jpg';" />
+                {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100 fs-1">🛍️</div>
+                {% endif %}
+                {% if p.stock and p.stock <= 5 and p.stock > 0 %}
+                <span class="badge bg-danger position-absolute top-0 start-0 m-3">Only {{ p.stock }} left</span>
+                {% elif not p.stock or p.stock <= 0 %}
+                <span class="badge bg-secondary position-absolute top-0 start-0 m-3">Out of Stock</span>
+                {% endif %}
+              </div>
+            </a>
+            <div class="card-body p-3 d-flex flex-column">
+              <span class="text-secondary small fw-semibold">{{ p.category_name or 'Groceries' }}</span>
+              <h3 class="h6 fw-bold mt-1 mb-1 text-truncate">
+                <a href="/product/{{ p.product_id }}" class="text-dark text-decoration-none">{{ p.product_name }}</a>
+              </h3>
+              <p class="text-muted small mb-3">{{ p.brand_name or 'FreshCart Choice' }}</p>
+              
+              <div class="d-flex justify-content-between align-items-center mt-auto">
+                <div>
+                  <strong class="fs-5">₹{{ p.price }}</strong>
+                </div>
+                {% if p.stock and p.stock > 0 %}
+                <a href="{{ url_for('add_to_cart', product_id=p.product_id) }}" class="btn btn-add">+ Add</a>
+                {% else %}
+                <button class="btn btn-sm btn-outline-secondary rounded-pill disabled" disabled>Sold Out</button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-5 bg-white rounded-4 shadow-sm p-5">
+        <div class="display-3 mb-3">🔍</div>
+        <h3 class="h4 fw-bold">No products found</h3>
+        <p class="text-secondary mb-4">We couldn't find any items matching your criteria. Try adjusting your filters or search keyword.</p>
+        <a href="{{ url_for('products') }}" class="btn btn-dark rounded-pill px-4">Clear All Filters</a>
+      </div>
+      {% endif %}
+    </main>
+
+    <footer class="py-4 bg-white border-top">
+      <div class="container text-center text-muted small">
+        <p class="mb-0">© 2026 FreshCart. Thoughtful groceries for everyday living.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

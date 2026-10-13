@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>User Dashboard | Online Super Market</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #f5f7fb;
+        font-family: Arial, sans-serif;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .hero {
+        background: linear-gradient(135deg, #212529, #495057);
+        color: white;
+        border-radius: 20px;
+        padding: 45px;
+      }
+
+      .dashboard-card {
+        border: none;
+        border-radius: 18px;
+        transition: 0.3s;
+        height: 100%;
+      }
+
+      .dashboard-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      .icon-box {
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        background: #f1f3f5;
+      }
+
+      .product-card {
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+        transition: 0.3s;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .product-img {
+        height: 180px;
+        object-fit: cover;
+        background: #e9ecef;
+      }
+
+      .status {
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: #e9f7ef;
+        color: #198754;
+      }
+
+      footer {
+        margin-top: 60px;
+        padding: 25px;
+        background: #212529;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="#"> 🛒 Super Market </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavbar"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item">
+              <a class="nav-link active" href="/user_dashboard"> Dashboard </a>
+            </li>
+
+            <!-- Bootstrap Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                Shop
+              </a>
+
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="/products"> All Products </a>
+                </li>
+
+                <li>
+                  <a class="dropdown-item" href="/categories"> Categories </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/cart"> 🛒 Cart </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/orders"> My Orders </a>
+            </li>
+
+            <li class="nav-item ms-lg-3">
+              <a class="btn btn-light btn-sm px-3" href="/logout"> Logout </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="container py-5">
+      <!-- HERO -->
+
+      <section class="hero mb-5">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <p class="text-uppercase small mb-2">Welcome Back</p>
+
+            <h1 class="display-5 fw-bold">Hello, {{ user_name }} 👋</h1>
+
+            <p class="lead mb-4">
+              Discover products, manage your cart, track your orders and share
+              your feedback.
+            </p>
+
+            <a href="/products" class="btn btn-light btn-lg">
+              Start Shopping →
+            </a>
+          </div>
+
+          <div class="col-lg-4 text-center mt-4 mt-lg-0">
+            <div style="font-size: 110px">🛍️</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= QUICK ACTIONS ================= -->
+
+      <h3 class="fw-bold mb-4">Quick Actions</h3>
+
+      <div class="row g-4 mb-5">
+        <!-- Browse -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card dashboard-card shadow-sm p-4">
+            <div class="icon-box mb-3">🛍️</div>
+
+            <h5 class="fw-bold">Browse Products</h5>
+
+            <p class="text-muted">
+              Explore products from different categories.
+            </p>
+
+            <a href="/products" class="btn btn-dark mt-auto"> Shop Now </a>
+          </div>
+        </div>
+
+        <!-- Cart -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card dashboard-card shadow-sm p-4">
+            <div class="icon-box mb-3">🛒</div>
+
+            <h5 class="fw-bold">My Cart</h5>
+
+            <p class="text-muted">View and modify the products in your cart.</p>
+
+            <a href="/cart" class="btn btn-dark mt-auto"> View Cart </a>
+          </div>
+        </div>
+
+        <!-- Orders -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card dashboard-card shadow-sm p-4">
+            <div class="icon-box mb-3">📦</div>
+
+            <h5 class="fw-bold">My Orders</h5>
+
+            <p class="text-muted">View your previous and current orders.</p>
+
+            <a href="/orders" class="btn btn-dark mt-auto"> View Orders </a>
+          </div>
+        </div>
+
+        <!-- Feedback -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card dashboard-card shadow-sm p-4">
+            <div class="icon-box mb-3">⭐</div>
+
+            <h5 class="fw-bold">Feedback</h5>
+
+            <p class="text-muted">Rate products and share your comments.</p>
+
+            <a href="{{ url_for('products') }}" class="btn btn-dark mt-auto">
+              Give Feedback
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= RECENT ORDERS ================= -->
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">Recent Orders</h3>
+
+        <a href="/orders" class="text-decoration-none"> View All </a>
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-4 mb-5">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% if orders %} {% for order in orders %}
+
+                <tr>
+                  <td>
+                    <strong> #{{ order.order_id }} </strong>
+                  </td>
+
+                  <td>{{ order.created_on }}</td>
+
+                  <td>₹{{ order.total }}</td>
+
+                  <td>Cash on Delivery</td>
+
+                  <td>
+                    <span class="status"> {{ order.status }} </span>
+                  </td>
+                </tr>
+
+                {% endfor %} {% else %}
+
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-muted">
+                    No orders yet.
+                  </td>
+                </tr>
+
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= FEATURED PRODUCTS ================= -->
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">Explore Products</h3>
+
+        <a href="/products" class="btn btn-outline-dark btn-sm"> View All </a>
+      </div>
+
+      <div class="row g-4">
+        {% if products %} {% for product in products %}
+
+        <div class="col-sm-6 col-lg-3">
+          <div class="card product-card shadow-sm h-100">
+            {% if product.photo %}
+
+            <img
+              src="{{ url_for('static',
+                    filename='uploads/' + product.photo) }}"
+              class="card-img-top product-img"
+              alt="{{ product.product_name }}"
+            />
+
+            {% else %}
+
+            <div
+              class="product-img d-flex align-items-center justify-content-center"
+            >
+              🛒
+            </div>
+
+            {% endif %}
+
+            <div class="card-body">
+              <small class="text-muted"> {{ product.brand_name }} </small>
+
+              <h5 class="fw-bold mt-1">{{ product.product_name }}</h5>
+
+              <h5 class="fw-bold">₹{{ product.price }}</h5>
+
+              <a
+                href="/add_to_cart/{{ product.product_id }}"
+                class="btn btn-dark w-100 mt-2"
+              >
+                Add to Cart
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %} {% else %}
+        <div class="col-12">
+          <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+            <div class="fs-1 mb-3">🛒</div>
+            <h5 class="fw-bold">Products are coming soon</h5>
+            <p class="text-muted mb-4">
+              There are no products available right now. Please check back
+              shortly.
+            </p>
+            <a href="/" class="btn btn-dark mx-auto">Return Home</a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+      <div class="container text-center">
+        <h5>🛒 Online Super Market</h5>
+
+        <p class="mb-0 small">
+          Shop products • Manage cart • Track orders • Share feedback
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
